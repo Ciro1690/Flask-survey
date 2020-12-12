@@ -1,8 +1,8 @@
-source venv/bin/activateclass Question:
+class Question:
     """Question on a questionnaire."""
 
     def __init__(self, question, choices=None, allow_text=False):
-        """Create question (assume Yes/No for choices."""
+        """Create question (assume Yes/No for choices.)"""
 
         if not choices:
             choices = ["Yes", "No"]

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Survey home{% endblock %}
+{% block content %}
+{% for msg in get_flashed_messages() %}
+<p>{{ msg }}</p>
+{% endfor %}
+<h2>{{survey.title}}</h2>
+<p>{{survey.instructions}}</p>
+<form action="/questions/0">
+<button>Start the survey</button>
+</form>
+{% endblock %}
