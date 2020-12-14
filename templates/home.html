@@ -4,9 +4,16 @@
 {% for msg in get_flashed_messages() %}
 <p>{{ msg }}</p>
 {% endfor %}
-<h2>{{survey.title}}</h2>
-<p>{{survey.instructions}}</p>
-<form action="/questions/0">
-<button>Start the survey</button>
-</form>
+<h1>Choose one of the following surveys to take:</h1>
+<div class="container">
+    <div class="m-5">
+        <h2 class="text-success">{{survey1.title}}</h2>
+        <p class="text-success">{{survey1.instructions}}</p>
+        <h2 class="text-info">{{survey2.title}}</h2>
+        <p class="text-info">{{survey2.instructions}}</p>
+    </div>
+    <form action="/start", method="POST">
+    <input type="submit" value="Satisfaction survey" name=satisfaction>
+    <input type="submit" value="Personality survey" name=personality>
+    </form>
 {% endblock %}

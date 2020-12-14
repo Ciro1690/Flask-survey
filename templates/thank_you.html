@@ -2,4 +2,19 @@
 {% block title %}Thank you{% endblock %}
 {% block content %}
 <h1>Thank you for submitting the survey!!</h1>
+<div class="container">
+    <div class="m-5">
+        <h1>Here are your answers</h1>
+        {% for question in questions %}
+        <h3 class="text-dark">{{question.question}} - <p class="text-success">{{session["responses"][loop.index-1]}}</p></h3>
+        {% endfor %}
+
+        <h2>Any comments</h2>
+        {% for comment in session["comments"] %}
+        <p>{{comment}}</p>
+        {% endfor %}
+    </div>
+</div>
+
+
 {% endblock %}
