@@ -5,13 +5,10 @@
 <div class="container">
     <div class="m-5">
         <h1>Here are your answers</h1>
-        {% for question in questions %}
-        <h3 class="text-dark">{{question.question}} - <p class="text-success">{{session["responses"][loop.index-1]}}</p></h3>
-        {% endfor %}
-
-        <h2>Any comments</h2>
-        {% for comment in session["comments"] %}
-        <p>{{comment}}</p>
+        {% for value in complete_answers.values() %}
+        <h2 class="text-dark">{{value['question']}}</h2>
+        <h2 class="text-success">{{value['response']}}</h2>
+        <h2 class="text-info font-italic">{{value['comment']}}</h2>
         {% endfor %}
     </div>
 </div>

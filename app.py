@@ -9,6 +9,7 @@ app.config['SECRET_KEY'] = "oh-so-secret"
 debug = DebugToolbarExtension(app)
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
+complete_answers = {}
 
 @app.route('/')
 def home_page():
@@ -23,17 +24,17 @@ def start():
 
     if satisfaction:
         session['survey'] = 1
-        return redirect('/questions/0')
     elif personality:
         session['survey'] = 2
-        return redirect('/questions/0')
+    return redirect('/questions/0')
+
+
+def set_survey():
+    return survey_1 if session['survey'] == 1 else survey_2
 
 @app.route('/questions/<int:post_id>')
 def display_questions(post_id):
-    if session['survey'] == 1:
-        survey = survey_1
-    elif session['survey'] == 2:
-        survey = survey_2
+    survey = set_survey()
     if (post_id < 0 or post_id > len(survey.questions)-1):
         flash("You searched for a question out of range.")
         return redirect('/')
@@ -45,21 +46,26 @@ def display_questions(post_id):
 
 @app.route('/answer', methods=["POST"])
 def log_answer():
-    choice = request.form.get("choice")
+    survey = set_survey()
+
+    response = request.form.get("choice")
+    current_question = {}
+    current_question['question'] = survey.questions[len(session['responses'])].question
+    current_question['response'] = response
+
     responses = session['responses']
-    responses.append(choice)
+    responses.append(response)
     session['responses'] = responses
 
     if request.form.get("comment"):
         comment = request.form.get("comment")
+        current_question['comment'] = comment
         comments = session['comments']
         comments.append(comment)
         session['comments'] = comments
 
-    if session['survey'] == 1:
-        survey = survey_1
-    elif session['survey'] == 2:
-        survey = survey_2
+    complete_answers[len(session['responses'])] = current_question
+    print(complete_answers)
 
     if (len(survey.questions) == len(session['responses'])):
         return redirect('/questions/thank_you')
@@ -68,9 +74,5 @@ def log_answer():
 
 @app.route('/questions/thank_you')
 def thank_you():
-    if session['survey'] == 1:
-        survey = survey_1
-    elif session['survey'] == 2:
-        survey = survey_2
-
-    return render_template('thank_you.html',questions=survey.questions)
+    survey = set_survey()
+    return render_template('thank_you.html',complete_answers=complete_answers)
